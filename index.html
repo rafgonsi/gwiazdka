@@ -330,6 +330,47 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     for (let i = 0; i < plain.length; i++) out[4 + i] = plain[i] ^ ks[i];
     return "g" + Array.from(out, b => b.toString(16).padStart(2, "0")).join("");
   }
+  // ---------- krótki link ----------
+  // Gdy lista osób jest taka jak wbudowana w stronę, link niesie tylko numer układu par
+  // (kod Lehmera permutacji), numer losowania i odcisk listy imion: kilkanaście znaków.
+  const BUILTIN = DEFAULT_NAMES.split("\n");
+  const SHORT_MASK = 0x5A3C91D7E4Bn;
+  function namesPrint(names) {
+    let h = 0x811c9dc5;
+    for (const ch of names.join("\n")) { h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; }
+    return (h ^ (h >>> 8) ^ (h >>> 16) ^ (h >>> 24)) & 255;
+  }
+  const sameNames = names => names.length === BUILTIN.length && names.every((n, i) => n === BUILTIN[i]);
+  function lehmer(perm) {
+    const avail = perm.map((_, i) => i);
+    let code = 0;
+    perm.forEach((p, i) => { const k = avail.indexOf(p); code = code * (perm.length - i) + k; avail.splice(k, 1); });
+    return code;
+  }
+  function unlehmer(code, n) {
+    const digits = [];
+    for (let r = 1; r <= n; r++) { digits.unshift(code % r); code = Math.floor(code / r); }
+    const avail = [...Array(n).keys()];
+    return digits.map(d => avail.splice(d, 1)[0]);
+  }
+  function makeShortToken(drawId, perm) {
+    const p = (BigInt(lehmer(perm)) * 65536n + BigInt(parseInt(drawId, 16))) * 256n + BigInt(namesPrint(BUILTIN));
+    return "s" + (p ^ SHORT_MASK).toString(36);
+  }
+  function readShortToken(t) {
+    if (!/^s[0-9a-z]{1,12}$/.test(t)) return null;
+    let p = 0n;
+    for (const ch of t.slice(1)) p = p * 36n + BigInt(parseInt(ch, 36));
+    p ^= SHORT_MASK;
+    const print = Number(p % 256n); p /= 256n;
+    const drawNum = Number(p % 65536n); p /= 65536n;
+    const code = Number(p), n = BUILTIN.length;
+    let fact = 1; for (let i = 2; i <= n; i++) fact *= i;
+    if (print !== namesPrint(BUILTIN) || code >= fact) return null;
+    const perm = unlehmer(code, n);
+    return { drawId: drawNum.toString(16).padStart(4, "0").toUpperCase(), pairs: BUILTIN.map((g, i) => [g, BUILTIN[perm[i]]]) };
+  }
+
   function readToken(t) {
     if (!/^g(?:[0-9a-f]{2}){6,}$/.test(t)) return null;
     const bytes = new Uint8Array(t.slice(1).match(/../g).map(h => parseInt(h, 16)));
@@ -681,7 +722,9 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
       if (!current || current.error) return;
       const perm = current.perms[randInt(current.perms.length)];
       const drawId = Array.from(crypto.getRandomValues(new Uint8Array(2)), b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-      state.result = { drawId, token: makeToken(drawId, current.names.map((g, i) => [g, current.names[perm[i]]])) };
+      state.result = { drawId, token: sameNames(current.names)
+        ? makeShortToken(drawId, perm)
+        : makeToken(drawId, current.names.map((g, i) => [g, current.names[perm[i]]])) };
       save(state); renderDraw(); renderShare();
       toast("Wylosowano. Link jest gotowy.");
     }
@@ -726,7 +769,10 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
   function route() {
     toastEl.hidden = true;
     const h = location.hash.replace(/^#/, "");
-    if (/^g[0-9a-f]/.test(h)) { const d = readToken(h); if (d) renderPicker(d); else renderBroken(); }
+    if (/^g[0-9a-f]/.test(h) || /^s[0-9a-z]/.test(h)) {
+      const d = h[0] === "s" ? readShortToken(h) : readToken(h);
+      if (d) renderPicker(d); else renderBroken();
+    }
     else renderOrganizer();
     window.scrollTo(0, 0);
   }
