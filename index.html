@@ -234,19 +234,19 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
   85% { transform: rotate(-2deg); }
   100% { opacity: 1; transform: none; }
 }
+/* Sleigh: three nested moves so nothing stutters. The outer layer slides across at a constant speed,
+   the middle one climbs in one smooth arc, the inner one bobs gently as the reindeer gallop. */
 .sleigh {
   position: fixed; top: calc(24vh + env(safe-area-inset-top, 0px)); left: 0; width: min(340px, 72vw);
-  z-index: 7; pointer-events: none;
-  animation: fly 1.9s cubic-bezier(.4,.1,.6,.9) forwards;
-  filter: drop-shadow(0 0 10px rgba(255,230,160,.45));
+  z-index: 7; pointer-events: none; will-change: transform;
+  animation: flyX 2.2s linear forwards;
 }
+.sleigh-arc { animation: flyY 2.2s cubic-bezier(.45,0,.55,1) forwards; will-change: transform; }
+.sleigh-bob { animation: bob .55s ease-in-out infinite alternate; will-change: transform; }
 .sleigh svg { display: block; width: 100%; height: auto; }
-@keyframes fly {
-  0% { transform: translate(100vw, 8vh) rotate(-4deg); }
-  40% { transform: translate(50vw, 0) rotate(-2deg); }
-  70% { transform: translate(15vw, 4vh) rotate(-5deg); }
-  100% { transform: translate(-115%, -6vh) rotate(-9deg); }
-}
+@keyframes flyX { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+@keyframes flyY { from { transform: translateY(7vh) rotate(-2deg); } to { transform: translateY(-7vh) rotate(-7deg); } }
+@keyframes bob { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
 
 @media (prefers-reduced-motion: reduce) {
   .tag.twist .tag-inner, .lights span::after, .page.entering > *, .page.entering > .hang { animation: none; }
@@ -431,11 +431,12 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
   function flySleigh() {
     document.querySelectorAll(".sleigh").forEach(n => n.remove());
     const s = document.createElement("div");
-    s.className = "sleigh"; s.setAttribute("aria-hidden", "true"); s.innerHTML = SLEIGH;
+    s.className = "sleigh"; s.setAttribute("aria-hidden", "true");
+    s.innerHTML = `<div class="sleigh-arc"><div class="sleigh-bob">${SLEIGH}</div></div>`;
     document.body.appendChild(s);
     const done = () => s.remove();
-    s.addEventListener("animationend", done);
-    setTimeout(done, 2300);
+    s.addEventListener("animationend", e => { if (e.target === s) done(); });
+    setTimeout(done, 2600);
   }
   // Fade the current screen out, swap in the next one, and let it come in.
   let busy = false;
@@ -482,7 +483,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     app.querySelectorAll(".who-btn").forEach(b => b.addEventListener("click", () => transition(
       () => { b.closest("li").classList.add("chosen"); gust(-1); flySleigh(); },
       () => renderTag(draw, +b.dataset.i),
-      1050)));
+      1300)));
   }
 
   function renderTag(draw, i) {
