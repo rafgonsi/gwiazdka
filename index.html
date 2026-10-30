@@ -508,7 +508,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
       <path d="M46 28 L56 50 L48 46 L44 52 L42 30 Z" fill="#B01F31"/>
       <ellipse cx="42" cy="26" rx="7" ry="6" fill="#E04257"/>
     </svg>`;
-  const eyebrow = draw => `<p class="eyebrow">Gwiazdka ${YEAR} · losowanie <span class="draw-id">${esc(draw.drawId)}</span></p>`;
+  const eyebrow = () => `<p class="eyebrow">Gwiazdka ${YEAR}</p>`;
 
   // ---------- family view ----------
   function renderPicker(draw) {
@@ -516,11 +516,11 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     app.innerHTML = `
       ${eyebrow(draw)}
       <h1>Kim jesteś?</h1>
-      <p class="lead">Wybierz swoje imię. Na następnym ekranie odwrócisz zawieszkę i zobaczysz, komu w tym roku robisz prezent.</p>
+      <p class="lead">Wybierz swoje imię.</p>
       <ul class="who-grid">
         ${draw.pairs.map((p, i) => `<li><button class="who-btn" type="button" data-i="${i}">${esc(p[0])}</button></li>`).join("")}
       </ul>
-      <p class="note">Każdy wybiera tylko swoje imię, bez podglądania. Jeśli coś pójdzie nie tak, daj znać ${ORGANIZER}.</p>`;
+      <p class="note">Każdy wybiera tylko swoje imię. Jeśli coś pójdzie nie tak, daj znać ${ORGANIZER}.</p>`;
     app.querySelectorAll(".who-btn").forEach(b => b.addEventListener("click", () => transition(
       () => { b.closest("li").classList.add("chosen"); gust(-1); flySleigh(); },
       () => renderTag(draw, +b.dataset.i),
@@ -561,7 +561,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
       tag.setAttribute("aria-label", "Robisz prezent dla: " + receiver);
       tag.classList.add("flipped");
       if (!reduceMotion) tag.classList.add("twist");
-      document.getElementById("lead").textContent = "Zachowaj to dla siebie. Możesz tu wrócić w każdej chwili, wybierając znowu swoje imię.";
+      document.getElementById("lead").style.visibility = "hidden";
       back.textContent = "Gotowe, wróć do listy imion";
     });
     window.scrollTo(0, 0);
@@ -711,7 +711,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
         return;
       }
       drawArea.innerHTML = state.result
-        ? `<p class="status ok">Wylosowano. Numer losowania: <span class="draw-id">${esc(state.result.drawId)}</span> (widać go też u góry strony dla rodziny).</p>
+        ? `<p class="status ok">Wylosowano. Numer losowania: <span class="draw-id">${esc(state.result.drawId)}</span>.</p>
            <div><button class="btn-ghost" id="again" type="button" ${blocked ? "disabled" : ""}>Losuj od nowa</button></div>`
         : `<div><button class="btn" id="draw" type="button" ${blocked ? "disabled" : ""}>Losuj</button></div>`;
       if ($("again")) $("again").onclick = () => { confirming = true; renderDraw(); };
