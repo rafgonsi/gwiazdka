@@ -213,9 +213,44 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
 }
 .back-btn:hover { border-color: #F7EFDC; }
 
+/* Screen change: the chosen name is pulled up into the tree while a snow gust and Santa's sleigh
+   cross the sky, then the personal tag drops down on its twine. */
+.tree .page > * { transition: opacity .4s ease, transform .4s ease; }
+.tree .page.leaving > :not(.who-grid) { opacity: 0; transform: translateY(-14px); }
+.page.leaving .who-grid li { transition: opacity .4s ease, transform .5s ease; }
+.page.leaving .who-grid li:not(.chosen) { opacity: 0; transform: translateY(26px) scale(.92); }
+.page.leaving .who-grid li.chosen {
+  transform: translateY(-45vh) rotate(-8deg); opacity: 0;
+  transition: transform .9s cubic-bezier(.55,-0.35,.75,.4) .1s, opacity .45s ease .6s;
+}
+.who-grid li.chosen .who-btn { box-shadow: inset 0 0 0 2px #C8263A, inset 0 0 0 4px #EBD5A8, inset 0 0 0 5px #B9975F, 0 0 0 4px rgba(230,194,102,.55), 0 0 28px rgba(255,214,120,.55); }
+.page.entering > * { animation: fadeUp .6s ease both; animation-delay: calc(var(--i, 0) * 90ms); }
+.page.entering > .hang { animation: tagDrop 1.25s cubic-bezier(.3,1.3,.5,1) .2s both; transform-origin: 50% 0; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes tagDrop {
+  0% { opacity: 0; transform: translateY(-55vh) rotate(-7deg); }
+  35% { opacity: 1; }
+  70% { transform: translateY(0) rotate(4deg); }
+  85% { transform: rotate(-2deg); }
+  100% { opacity: 1; transform: none; }
+}
+.sleigh {
+  position: fixed; top: calc(24vh + env(safe-area-inset-top, 0px)); left: 0; width: min(340px, 72vw);
+  z-index: 7; pointer-events: none;
+  animation: fly 1.9s cubic-bezier(.4,.1,.6,.9) forwards;
+  filter: drop-shadow(0 0 10px rgba(255,230,160,.45));
+}
+.sleigh svg { display: block; width: 100%; height: auto; }
+@keyframes fly {
+  0% { transform: translate(100vw, 8vh) rotate(-4deg); }
+  40% { transform: translate(50vw, 0) rotate(-2deg); }
+  70% { transform: translate(15vw, 4vh) rotate(-5deg); }
+  100% { transform: translate(-115%, -6vh) rotate(-9deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .tag.twist .tag-inner, .lights span::after { animation: none; }
-  .tag-inner, .who-btn { transition: none; }
+  .tag.twist .tag-inner, .lights span::after, .page.entering > *, .page.entering > .hang { animation: none; }
+  .tag-inner, .who-btn, .tree .page > *, .page.leaving .who-grid li { transition: none; }
 }
 </style>
 </head>
@@ -328,7 +363,8 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     document.body.appendChild(c);
     const ctx = c.getContext("2d");
     const size = () => { const d = window.devicePixelRatio || 1; c.width = innerWidth * d; c.height = innerHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
-    let flakes = [], raf = 0;
+    let flakes = [], raf = 0, wind = 0;
+    gust = dir => { wind = 7 * dir; };
     const init = () => {
       const n = Math.min(160, Math.round(innerWidth * innerHeight / 9000));
       flakes = Array.from({ length: n }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 2.3 + 0.7, s: Math.random() * 0.6 + 0.25, w: Math.random() * 6.28 }));
@@ -336,8 +372,14 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     const frame = () => {
       ctx.clearRect(0, 0, innerWidth, innerHeight);
       ctx.fillStyle = "rgba(255,255,255,0.85)";
+      wind *= 0.975;
       for (const f of flakes) {
-        if (!reduceMotion) { f.y += f.s; f.w += 0.012; f.x += Math.sin(f.w) * 0.35; if (f.y > innerHeight + 5) { f.y = -5; f.x = Math.random() * innerWidth; } }
+        if (!reduceMotion) {
+          f.y += f.s * (1 + Math.abs(wind) * 0.5); f.w += 0.012;
+          f.x += Math.sin(f.w) * 0.35 + wind * (0.4 + f.r * 0.35);
+          if (f.y > innerHeight + 5) { f.y = -5; f.x = Math.random() * innerWidth; }
+          if (f.x < -10) f.x = innerWidth + 5; else if (f.x > innerWidth + 10) f.x = -5;
+        }
         ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
       }
       if (!reduceMotion) raf = requestAnimationFrame(frame);
@@ -345,13 +387,71 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
     size(); init(); frame();
     const onR = () => { size(); init(); if (reduceMotion) frame(); };
     addEventListener("resize", onR);
-    cleanups.push(() => { cancelAnimationFrame(raf); removeEventListener("resize", onR); });
+    cleanups.push(() => { cancelAnimationFrame(raf); removeEventListener("resize", onR); gust = () => {}; });
   }
+  let gust = () => {};
   function treeScene() {
     clearScene();
     document.body.className = "tree";
     deco.innerHTML = `<div class="lights">${Array.from({ length: 40 }, (_, i) => `<span style="--d:${(i * 0.37 % 2.4).toFixed(2)}s"></span>`).join("")}</div>`;
     snowfall();
+  }
+  function ensureScene() { if (document.body.className !== "tree") treeScene(); }
+
+  const SLEIGH = `<svg viewBox="0 0 300 90" aria-hidden="true">
+      <defs>
+        <g id="deer">
+          <path d="M22 40 C22 32 30 30 40 31 L58 31 C66 31 70 35 70 41 C70 46 64 48 56 48 L34 48 C26 48 22 46 22 40 Z" fill="#C99560"/>
+          <path d="M26 38 L18 22 L24 19 L32 34 Z" fill="#C99560"/>
+          <ellipse cx="17" cy="19" rx="7" ry="4.5" fill="#C99560"/>
+          <circle cx="10.5" cy="19.5" r="2" fill="#7A5232"/>
+          <path d="M19 15 L16 5 M17 9 L11 5 M17 10 L22 4 M22 15 L25 7 M24 10 L29 7" stroke="#F4D58A" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <path d="M30 47 L26 58 L30 62 M36 47 L38 60 M58 47 L64 56 L60 62 M64 46 L70 58" stroke="#C99560" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M69 39 L74 36" stroke="#C99560" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </defs>
+      <use href="#deer" x="0" y="6"/>
+      <use href="#deer" x="70" y="0"/>
+      <path d="M60 44 Q 120 54 150 50 M130 38 Q 150 46 168 48" stroke="#F4D58A" stroke-width="1.5" fill="none"/>
+      <circle cx="98" cy="49" r="2.2" fill="#F4D58A"/><circle cx="108" cy="50" r="2.2" fill="#F4D58A"/><circle cx="118" cy="50.5" r="2.2" fill="#F4D58A"/>
+      <path d="M168 38 Q 170 62 190 62 L 250 62 Q 262 62 264 48 L 268 26 L 248 30 L 244 48 L 186 48 Q 178 48 178 38 Z" fill="#C62F3A"/>
+      <path d="M186 48 L244 48" stroke="#F4D58A" stroke-width="2.5"/>
+      <path d="M158 74 Q 162 80 172 80 L 268 80 Q 280 80 282 68" stroke="#F4D58A" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M190 62 L188 80 M248 62 L250 80" stroke="#F4D58A" stroke-width="2.5"/>
+      <ellipse cx="252" cy="26" rx="14" ry="13" fill="#8A5B34"/>
+      <path d="M246 14 Q 252 8 258 14" stroke="#6B4527" stroke-width="3" fill="none"/>
+      <rect x="208" y="22" width="26" height="26" rx="10" fill="#D8343F"/>
+      <circle cx="221" cy="17" r="7" fill="#F6D8C0"/>
+      <path d="M214 19 Q 221 34 228 19 Z" fill="#FFFFFF"/>
+      <path d="M213 14 L229 14 L236 4 Z" fill="#D8343F"/>
+      <circle cx="237" cy="4" r="3" fill="#FFFFFF"/>
+      <rect x="212" y="12" width="18" height="4" rx="2" fill="#FFFFFF"/>
+      <path d="M210 30 L198 40" stroke="#D8343F" stroke-width="5" stroke-linecap="round"/>
+    </svg>`;
+  function flySleigh() {
+    document.querySelectorAll(".sleigh").forEach(n => n.remove());
+    const s = document.createElement("div");
+    s.className = "sleigh"; s.setAttribute("aria-hidden", "true"); s.innerHTML = SLEIGH;
+    document.body.appendChild(s);
+    const done = () => s.remove();
+    s.addEventListener("animationend", done);
+    setTimeout(done, 2300);
+  }
+  // Fade the current screen out, swap in the next one, and let it come in.
+  let busy = false;
+  function transition(prepare, render, delay) {
+    if (busy) return;
+    if (reduceMotion) { render(); return; }
+    busy = true;
+    prepare();
+    app.classList.add("leaving");
+    setTimeout(() => {
+      render();
+      app.classList.remove("leaving");
+      Array.from(app.children).forEach((el, k) => el.style.setProperty("--i", k));
+      app.classList.add("entering");
+      setTimeout(() => { app.classList.remove("entering"); busy = false; }, 1600);
+    }, delay);
   }
 
   const HOLLY = `<svg class="holly" viewBox="0 0 60 32" aria-hidden="true">
@@ -370,7 +470,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
 
   // ---------- family view ----------
   function renderPicker(draw) {
-    treeScene();
+    ensureScene();
     app.innerHTML = `
       ${eyebrow(draw)}
       <h1>Kim jesteś?</h1>
@@ -379,12 +479,15 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
         ${draw.pairs.map((p, i) => `<li><button class="who-btn" type="button" data-i="${i}">${esc(p[0])}</button></li>`).join("")}
       </ul>
       <p class="note">Każdy wybiera tylko swoje imię, bez podglądania. Jeśli coś pójdzie nie tak, daj znać ${ORGANIZER}.</p>`;
-    app.querySelectorAll(".who-btn").forEach(b => b.addEventListener("click", () => renderTag(draw, +b.dataset.i)));
+    app.querySelectorAll(".who-btn").forEach(b => b.addEventListener("click", () => transition(
+      () => { b.closest("li").classList.add("chosen"); gust(-1); flySleigh(); },
+      () => renderTag(draw, +b.dataset.i),
+      1050)));
   }
 
   function renderTag(draw, i) {
     const [giver, receiver] = draw.pairs[i];
-    treeScene();
+    ensureScene();
     app.innerHTML = `
       ${eyebrow(draw)}
       <h1>Cześć, ${esc(giver)}!</h1>
@@ -405,7 +508,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
       <button class="back-btn" id="back" type="button">To nie ja, wróć do listy</button>`;
     const tag = document.getElementById("tag");
     const back = document.getElementById("back");
-    back.addEventListener("click", () => renderPicker(draw));
+    back.addEventListener("click", () => transition(() => gust(1), () => { renderPicker(draw); window.scrollTo(0, 0); }, 420));
     tag.addEventListener("click", () => {
       if (tag.dataset.open) return;
       tag.dataset.open = "1";
@@ -423,7 +526,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
   }
 
   function renderBroken() {
-    treeScene();
+    ensureScene();
     app.innerHTML = `
       <p class="eyebrow">Gwiazdka ${YEAR}</p>
       <h1>Ten link nie działa</h1>
@@ -620,6 +723,7 @@ body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A
   }
 
   function route() {
+    toastEl.hidden = true;
     const h = location.hash.replace(/^#/, "");
     if (/^g[0-9a-f]/.test(h)) { const d = readToken(h); if (d) renderPicker(d); else renderBroken(); }
     else renderOrganizer();
