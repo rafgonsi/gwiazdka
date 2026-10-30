@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rodzinna Gwiazdka 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Figtree:wght@400;500;600&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout: one narrow column. Organizer = three numbered steps on a quiet token palette.
+   Family view = one Christmas-tree scene: pick your name, then twist your kraft tag around on its twine. */
+:root {
+  --bg: #EAF0EF;
+  --surface: #FFFFFF;
+  --ink: #15302A;
+  --muted: #587069;
+  --line: #C6D4D0;
+  --accent: #A8263B;
+  --accent-ink: #FFFFFF;
+  --gold: #A9801A;
+  --ok: #2F7A4F;
+  --warn: #9A5B0C;
+  --display: "Fraunces", "Georgia", "Times New Roman", serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --hand: "Caveat", "Segoe Print", "Comic Sans MS", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1B18; --surface: #142622; --ink: #E3EDEA; --muted: #93A8A2; --line: #2A3F3A;
+    --accent: #E06A7C; --accent-ink: #1C0A0E; --gold: #D8B24C; --ok: #6CC594; --warn: #E5A653;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1B18; --surface: #142622; --ink: #E3EDEA; --muted: #93A8A2; --line: #2A3F3A;
+  --accent: #E06A7C; --accent-ink: #1C0A0E; --gold: #D8B24C; --ok: #6CC594; --warn: #E5A653;
+  color-scheme: dark;
+}
+
+html, body { min-height: 100%; }
+body {
+  position: relative;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 2.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 7vw, 2.75rem); }
+h2 { font-size: 1.3rem; }
+p { margin: 0; }
+.eyebrow { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lead { color: var(--muted); max-width: 34rem; }
+.stack { display: flex; flex-direction: column; gap: 0.75rem; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  border: 0; border-radius: 999px; padding: 0.8rem 1.5rem;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 1rem;
+}
+.btn:hover { filter: brightness(1.07); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; filter: none; }
+.btn-ghost {
+  background: transparent; color: var(--ink); border: 1.5px solid var(--line);
+  border-radius: 999px; padding: 0.45rem 0.9rem; font-weight: 500; font-size: 0.9rem;
+}
+.btn-ghost:hover { border-color: var(--ink); }
+.draw-id { font-variant-numeric: tabular-nums; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  transform: translateX(-50%); background: var(--ink); color: var(--bg);
+  padding: 0.6rem 1.1rem; border-radius: 999px; font-weight: 500; font-size: 0.92rem;
+  max-width: calc(100vw - 32px);
+}
+
+/* ================= Organizer ================= */
+.step { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 0.25rem 1rem; }
+.step-num {
+  width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ink); color: var(--bg); font-family: var(--display); font-weight: 600;
+}
+.step-body { min-width: 0; display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.2rem; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 1rem; }
+@media (max-width: 560px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+label.field { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.35rem; }
+textarea, input[type="text"] {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 0.95rem;
+  background: var(--surface); color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 0.6rem 0.75rem;
+}
+textarea { resize: vertical; line-height: 1.5; }
+#names { min-height: 11rem; }
+#excl { min-height: 17rem; }
+.help { font-size: 0.85rem; color: var(--muted); }
+.status { font-size: 0.92rem; font-weight: 500; }
+.status.ok { color: var(--ok); }
+.status.bad { color: var(--accent); }
+.status.warn { color: var(--warn); }
+.confirm {
+  border: 1.5px solid var(--accent); border-radius: 12px; padding: 0.9rem 1rem;
+  display: flex; flex-direction: column; gap: 0.75rem; background: var(--surface);
+}
+.confirm .row, .row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.share-box {
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface);
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
+}
+.share-box .url {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.8rem; color: var(--muted);
+}
+
+/* ================= Family view: Christmas tree scene ================= */
+#deco { position: absolute; inset: 0 0 auto 0; z-index: 0; pointer-events: none; }
+canvas.fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+body.tree { background: radial-gradient(ellipse at 50% -10%, #1F6146 0%, #0F3A2A 55%, #0A281D 100%) fixed #0F3A2A; color: #F7EFDC; }
+.tree .page { align-items: center; text-align: center; gap: 1.6rem; padding-top: 3.5rem; }
+.tree .eyebrow { color: #E6C266; }
+.tree h1 { color: #FBF4E4; }
+.tree .lead { color: #CFE0D6; margin: 0 auto; }
+.tree .note { font-size: 0.9rem; color: #A9C4B6; max-width: 30rem; margin: 0 auto; padding-top: 1rem; border-top: 1px solid rgba(247,239,220,.18); }
+.label-sm { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+
+.lights { display: flex; overflow: hidden; height: 3.2rem; padding-top: env(safe-area-inset-top, 0px); }
+.lights span { position: relative; flex: 0 0 3.4rem; height: 1rem; border-bottom: 2px solid #3E5E4E; border-radius: 0 0 50% 50%; }
+.lights span::after {
+  content: ""; position: absolute; left: calc(50% - 0.3rem); top: calc(100% + 1px);
+  width: 0.6rem; height: 0.95rem; border-radius: 45% 45% 50% 50%;
+  background: var(--c); box-shadow: 0 0 10px 3px var(--c);
+  animation: twinkle 2.4s ease-in-out infinite; animation-delay: var(--d);
+}
+.lights span:nth-child(4n+1) { --c: #FF5A5F; }
+.lights span:nth-child(4n+2) { --c: #FFD25C; }
+.lights span:nth-child(4n+3) { --c: #5FD08A; }
+.lights span:nth-child(4n+4) { --c: #6EB6FF; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+/* Name picker: a row of small kraft tags */
+.who-grid {
+  list-style: none; margin: 0; padding: 0; width: 100%; max-width: 30rem;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 0.85rem;
+}
+.who-btn {
+  position: relative; width: 100%; border: 0; border-radius: 10px;
+  background: #EBD5A8; color: #5A1420; padding: 1rem 0.75rem 1rem 2.4rem;
+  font-family: var(--display); font-size: 1.3rem; font-weight: 600; text-align: left;
+  box-shadow: inset 0 0 0 2px #C8263A, inset 0 0 0 4px #EBD5A8, inset 0 0 0 5px #B9975F, 0 6px 14px rgba(0,0,0,.25);
+  transition: transform .2s ease;
+  word-break: break-word;
+}
+.who-btn::before {
+  content: ""; position: absolute; left: 0.95rem; top: 50%; width: 0.7rem; height: 0.7rem; margin-top: -0.35rem;
+  border-radius: 50%; background: #0F3A2A; box-shadow: inset 0 0 0 2px #B9975F;
+}
+.who-btn:hover { transform: translateY(-2px) rotate(-1.5deg); }
+
+/* The tag hangs on its twine and twists around it: the button holds the perspective,
+   .tag-inner turns in 3D, and each face carries its own clip-path so the 3D isn't flattened. */
+.hang { display: flex; flex-direction: column; align-items: center; }
+.bow-svg { width: 4.2rem; height: 2.6rem; display: block; margin-bottom: -0.3rem; position: relative; z-index: 2; }
+.twine { width: 4px; height: 3rem; border-radius: 2px; background: repeating-linear-gradient(180deg, #C8263A 0 6px, #F7EFDC 6px 12px); }
+.tag { position: relative; display: block; width: min(19rem, 86vw); height: 13rem; padding: 0; border: 0; background: none; perspective: 900px; }
+.tag-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .45s ease; }
+.tag:not(.flipped):hover .tag-inner { transform: rotateY(16deg); }
+.tag.flipped .tag-inner { transform: rotateY(180deg); }
+.tag.twist .tag-inner { animation: twist 1.9s cubic-bezier(.25,.7,.3,1) forwards; }
+@keyframes twist {
+  0% { transform: rotateY(0deg); }
+  55% { transform: rotateY(560deg); }
+  72% { transform: rotateY(520deg); }
+  86% { transform: rotateY(546deg); }
+  100% { transform: rotateY(540deg); }
+}
+.tag-face {
+  position: absolute; inset: 0; box-sizing: border-box;
+  background: #EBD5A8; color: #5A1420;
+  clip-path: polygon(50% 0, 100% 16%, 100% 100%, 0 100%, 0 16%);
+  padding: 3.4rem 1.5rem 1.75rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
+  box-shadow: inset 0 0 0 3px #C8263A, inset 0 0 0 6px #EBD5A8, inset 0 0 0 7px #B9975F;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.tag-back { transform: rotateY(180deg); background: #F0DDB6; }
+.tag-face::before {
+  content: ""; position: absolute; top: 1.25rem; left: 50%; width: 1rem; height: 1rem;
+  margin-left: -0.5rem; border-radius: 50%; background: #0F3A2A; box-shadow: inset 0 0 0 2px #B9975F;
+}
+.tag .label-sm { color: #7A5A2A; }
+.tag .tag-big { font-family: var(--display); font-size: 2.6rem; font-weight: 700; line-height: 1.1; word-break: break-word; color: #9E1B2E; }
+.tag .tag-hint { font-family: var(--hand); font-size: 1.6rem; font-weight: 700; color: #5A1420; }
+.tag .holly { width: 3rem; height: 1.6rem; flex: none; }
+.back-btn {
+  background: transparent; color: #F7EFDC; border: 1.5px solid rgba(247,239,220,.35);
+  border-radius: 999px; padding: 0.5rem 1.1rem; font-weight: 500; font-size: 0.95rem;
+}
+.back-btn:hover { border-color: #F7EFDC; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tag.twist .tag-inner, .lights span::after { animation: none; }
+  .tag-inner, .who-btn { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="deco" aria-hidden="true"></div>
+<main class="page" id="app"></main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(() => {
+  // Na własnym hostingu (np. GitHub Pages) bierze adres z paska przeglądarki.
+  const DEFAULT_BASE = (location.protocol === "file:" || (/^https?:$/.test(location.protocol) && !/claude/i.test(location.hostname)))
+    ? location.href.split("#")[0]
+    : "https://claude.ai/artifact/UanXVctEapMJNhbw1xu8aL";
+  const YEAR = "2026";
+  const ORGANIZER = "Rafałowi";
+  const STORE_KEY = "gwiazdka-2026-wspolny-link";
+
+  const DEFAULT_NAMES = ["Ania", "Miłosz", "Bartosz", "Rafał", "Mama", "Tata"].join("\n");
+  const DEFAULT_EXCL = [
+    "# Zeszły rok (2025)",
+    "Ania → Rafał",
+    "Miłosz → Ania",
+    "Bartosz → Miłosz",
+    "Rafał → Mama",
+    "Mama → Tata",
+    "Tata → Bartosz",
+    "",
+    "# Dwa lata temu (2024)",
+    "Ania → Mama",
+    "Rafał → Bartosz",
+    "Mama → Ania",
+    "Bartosz → Rafał",
+    "Miłosz → Tata",
+    "Tata → Miłosz"
+  ].join("\n");
+
+  const app = document.getElementById("app");
+  const deco = document.getElementById("deco");
+  const toastEl = document.getElementById("toast");
+  const enc = new TextEncoder();
+  const reduceMotion = (() => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } })();
+
+  // ---------- helpers ----------
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY) || "null") || {}; } catch (e) { return {}; } }
+  function save(state) { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* bez zapisu */ } }
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2200);
+  }
+  function randInt(n) {
+    const lim = Math.floor(4294967296 / n) * n, b = new Uint32Array(1);
+    do { crypto.getRandomValues(b); } while (b[0] >= lim);
+    return b[0] % n;
+  }
+
+  // ---------- wspólny link: wszystkie pary zakodowane w jednym ciągu ----------
+  // Kodowanie tylko zaciemnia wynik, żeby nie dało się go odczytać z linku na oko.
+  function keystream(nonce, n) {
+    let x = ((nonce[0] << 24 | nonce[1] << 16 | nonce[2] << 8 | nonce[3]) ^ 0x5A17C0DE) >>> 0;
+    if (x === 0) x = 0x9E3779B9;
+    const out = new Uint8Array(n);
+    for (let i = 0; i < n; i++) { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; out[i] = x & 255; }
+    return out;
+  }
+  function makeToken(drawId, pairs) {
+    const text = [drawId, ...pairs.map(p => p[0] + "\u0001" + p[1])].join("\u0002");
+    const data = enc.encode(text);
+    let sum = 0; for (const b of data) sum = (sum + b) & 255;
+    const plain = new Uint8Array(data.length + 1); plain[0] = sum; plain.set(data, 1);
+    const nonce = crypto.getRandomValues(new Uint8Array(4));
+    const ks = keystream(nonce, plain.length);
+    const out = new Uint8Array(4 + plain.length); out.set(nonce, 0);
+    for (let i = 0; i < plain.length; i++) out[4 + i] = plain[i] ^ ks[i];
+    return "g" + Array.from(out, b => b.toString(16).padStart(2, "0")).join("");
+  }
+  function readToken(t) {
+    if (!/^g(?:[0-9a-f]{2}){6,}$/.test(t)) return null;
+    const bytes = new Uint8Array(t.slice(1).match(/../g).map(h => parseInt(h, 16)));
+    const nonce = bytes.slice(0, 4), body = bytes.slice(4);
+    const ks = keystream(nonce, body.length);
+    const plain = body.map((b, i) => b ^ ks[i]);
+    const data = plain.slice(1);
+    let sum = 0; for (const b of data) sum = (sum + b) & 255;
+    if (sum !== plain[0]) return null;
+    let s;
+    try { s = new TextDecoder("utf-8", { fatal: true }).decode(data); } catch (e) { return null; }
+    const parts = s.split("\u0002");
+    if (parts.length < 2) return null;
+    const pairs = parts.slice(1).map(p => p.split("\u0001"));
+    if (pairs.some(p => p.length !== 2 || !p[0] || !p[1])) return null;
+    return { drawId: parts[0], pairs };
+  }
+
+  // ---------- scene ----------
+  let cleanups = [];
+  function clearScene() {
+    cleanups.forEach(f => { try { f(); } catch (e) {} });
+    cleanups = [];
+    document.querySelectorAll("canvas.fx").forEach(n => n.remove());
+    deco.innerHTML = "";
+    document.body.className = "";
+  }
+  function snowfall() {
+    const c = document.createElement("canvas");
+    c.className = "fx";
+    document.body.appendChild(c);
+    const ctx = c.getContext("2d");
+    const size = () => { const d = window.devicePixelRatio || 1; c.width = innerWidth * d; c.height = innerHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+    let flakes = [], raf = 0;
+    const init = () => {
+      const n = Math.min(160, Math.round(innerWidth * innerHeight / 9000));
+      flakes = Array.from({ length: n }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 2.3 + 0.7, s: Math.random() * 0.6 + 0.25, w: Math.random() * 6.28 }));
+    };
+    const frame = () => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      for (const f of flakes) {
+        if (!reduceMotion) { f.y += f.s; f.w += 0.012; f.x += Math.sin(f.w) * 0.35; if (f.y > innerHeight + 5) { f.y = -5; f.x = Math.random() * innerWidth; } }
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+      }
+      if (!reduceMotion) raf = requestAnimationFrame(frame);
+    };
+    size(); init(); frame();
+    const onR = () => { size(); init(); if (reduceMotion) frame(); };
+    addEventListener("resize", onR);
+    cleanups.push(() => { cancelAnimationFrame(raf); removeEventListener("resize", onR); });
+  }
+  function treeScene() {
+    clearScene();
+    document.body.className = "tree";
+    deco.innerHTML = `<div class="lights">${Array.from({ length: 40 }, (_, i) => `<span style="--d:${(i * 0.37 % 2.4).toFixed(2)}s"></span>`).join("")}</div>`;
+    snowfall();
+  }
+
+  const HOLLY = `<svg class="holly" viewBox="0 0 60 32" aria-hidden="true">
+      <path d="M30 18 C22 6 10 4 2 10 C8 12 9 16 6 20 C12 19 15 22 16 27 C20 22 25 21 30 18 Z" fill="#1E6A42"/>
+      <path d="M30 18 C38 6 50 4 58 10 C52 12 51 16 54 20 C48 19 45 22 44 27 C40 22 35 21 30 18 Z" fill="#25804F"/>
+      <circle cx="26" cy="19" r="4" fill="#C8263A"/><circle cx="34" cy="19" r="4" fill="#C8263A"/><circle cx="30" cy="13" r="4" fill="#D93A4C"/>
+    </svg>`;
+  const BOW = `<svg class="bow-svg" viewBox="0 0 84 52" aria-hidden="true">
+      <path d="M42 26 C30 6 8 4 6 18 C4 32 26 34 42 26 Z" fill="#C8263A"/>
+      <path d="M42 26 C54 6 76 4 78 18 C80 32 58 34 42 26 Z" fill="#B01F31"/>
+      <path d="M38 28 L28 50 L36 46 L40 52 L42 30 Z" fill="#9E1B2E"/>
+      <path d="M46 28 L56 50 L48 46 L44 52 L42 30 Z" fill="#B01F31"/>
+      <ellipse cx="42" cy="26" rx="7" ry="6" fill="#E04257"/>
+    </svg>`;
+  const eyebrow = draw => `<p class="eyebrow">Gwiazdka ${YEAR} · losowanie <span class="draw-id">${esc(draw.drawId)}</span></p>`;
+
+  // ---------- family view ----------
+  function renderPicker(draw) {
+    treeScene();
+    app.innerHTML = `
+      ${eyebrow(draw)}
+      <h1>Kim jesteś?</h1>
+      <p class="lead">Wybierz swoje imię. Na następnym ekranie odwrócisz zawieszkę i zobaczysz, komu w tym roku robisz prezent.</p>
+      <ul class="who-grid">
+        ${draw.pairs.map((p, i) => `<li><button class="who-btn" type="button" data-i="${i}">${esc(p[0])}</button></li>`).join("")}
+      </ul>
+      <p class="note">Każdy wybiera tylko swoje imię, bez podglądania. Jeśli coś pójdzie nie tak, daj znać ${ORGANIZER}.</p>`;
+    app.querySelectorAll(".who-btn").forEach(b => b.addEventListener("click", () => renderTag(draw, +b.dataset.i)));
+  }
+
+  function renderTag(draw, i) {
+    const [giver, receiver] = draw.pairs[i];
+    treeScene();
+    app.innerHTML = `
+      ${eyebrow(draw)}
+      <h1>Cześć, ${esc(giver)}!</h1>
+      <p class="lead" id="lead">Kliknij w zawieszkę na choince, żeby ją odwrócić.</p>
+      <div class="hang">
+        ${BOW}
+        <div class="twine" aria-hidden="true"></div>
+        <button class="tag" id="tag" type="button" aria-label="Odwróć zawieszkę">
+          <span class="tag-inner">
+            <span class="tag-face tag-front">
+              ${HOLLY}
+              <span class="tag-hint">Kliknij, żeby odwrócić</span>
+            </span>
+            <span class="tag-face tag-back" id="tagBack" aria-hidden="true"></span>
+          </span>
+        </button>
+      </div>
+      <button class="back-btn" id="back" type="button">To nie ja, wróć do listy</button>`;
+    const tag = document.getElementById("tag");
+    const back = document.getElementById("back");
+    back.addEventListener("click", () => renderPicker(draw));
+    tag.addEventListener("click", () => {
+      if (tag.dataset.open) return;
+      tag.dataset.open = "1";
+      const face = document.getElementById("tagBack");
+      face.innerHTML = `${HOLLY}<span class="label-sm">Robisz prezent dla</span><span class="tag-big">${esc(receiver)}</span>`;
+      face.removeAttribute("aria-hidden");
+      tag.querySelector(".tag-front").setAttribute("aria-hidden", "true");
+      tag.setAttribute("aria-label", "Robisz prezent dla: " + receiver);
+      tag.classList.add("flipped");
+      if (!reduceMotion) tag.classList.add("twist");
+      document.getElementById("lead").textContent = "Zachowaj to dla siebie. Możesz tu wrócić w każdej chwili, wybierając znowu swoje imię.";
+      back.textContent = "Gotowe, wróć do listy imion";
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function renderBroken() {
+    treeScene();
+    app.innerHTML = `
+      <p class="eyebrow">Gwiazdka ${YEAR}</p>
+      <h1>Ten link nie działa</h1>
+      <p class="lead">Wygląda na to, że link został ucięty przy kopiowaniu. Daj znać ${ORGANIZER}, a wyśle go jeszcze raz.</p>`;
+  }
+
+  // ---------- organizer ----------
+  function parseNames(text) {
+    const names = text.split(/\n|,/).map(s => s.trim()).filter(Boolean);
+    const seen = new Set(), dups = [];
+    for (const n of names) { const k = n.toLowerCase(); if (seen.has(k)) dups.push(n); seen.add(k); }
+    return { names, dups };
+  }
+  function parseExcl(text, names) {
+    const known = new Map(names.map(n => [n.toLowerCase(), n]));
+    const pairs = new Set(), errors = [];
+    text.split("\n").forEach((raw, i) => {
+      const line = raw.replace(/#.*$/, "").trim();
+      if (!line) return;
+      const parts = line.split(/\s*(?:-->|->|→|=>|>)\s*/);
+      if (parts.length !== 2 || !parts[0] || !parts[1]) { errors.push(`wiersz ${i + 1}: „${raw.trim()}” – użyj formatu Ania → Rafał`); return; }
+      const a = known.get(parts[0].toLowerCase()), b = known.get(parts[1].toLowerCase());
+      if (!a || !b) { errors.push(`wiersz ${i + 1}: nie znam imienia „${!a ? parts[0] : parts[1]}”`); return; }
+      pairs.add(a + "\u0001" + b);
+    });
+    return { pairs, errors };
+  }
+  function validPerms(names, pairs) {
+    const n = names.length, res = [], a = [...Array(n).keys()];
+    const ok = (i, j) => i !== j && !pairs.has(names[i] + "\u0001" + names[j]);
+    (function rec(k) {
+      if (k === n) { res.push(a.slice()); return; }
+      for (let i = k; i < n; i++) {
+        [a[k], a[i]] = [a[i], a[k]];
+        if (ok(k, a[k])) rec(k + 1);
+        [a[k], a[i]] = [a[i], a[k]];
+      }
+    })(0);
+    return res;
+  }
+  const factorial = n => { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; };
+  function analyse(state) {
+    const { names, dups } = parseNames(state.names);
+    if (names.length < 3) return { error: "Potrzeba co najmniej 3 osób." };
+    if (names.length > 9) return { error: "Ta wersja obsługuje do 9 osób." };
+    if (dups.length) return { error: "Imię powtarza się na liście: " + dups.join(", ") + ". Dopisz inicjał, np. Ania K." };
+    const { pairs, errors } = parseExcl(state.excl, names);
+    if (errors.length) return { error: "Popraw wykluczenia: " + errors.join("; ") + "." };
+    const perms = validPerms(names, pairs);
+    if (!perms.length) return { error: "Przy takich wykluczeniach nie da się nikogo wylosować. Usuń część par." };
+    return { names, pairs, perms };
+  }
+  const linkFor = (base, token) => base.trim().replace(/#.*$/, "") + "#" + token;
+
+  function renderOrganizer() {
+    clearScene();
+    const stored = load();
+    const state = Object.assign({ names: DEFAULT_NAMES, excl: DEFAULT_EXCL, base: DEFAULT_BASE, result: null }, stored);
+    // Adres bierzemy zawsze z bieżącej strony, chyba że ktoś go świadomie wpisał ręcznie.
+    if (!stored.baseManual || !String(state.base || "").trim()) { state.base = DEFAULT_BASE; state.baseManual = false; }
+
+    app.innerHTML = `
+      <header class="stack">
+        <p class="eyebrow">Panel organizatora</p>
+        <h1>Rodzinna Gwiazdka ${YEAR}</h1>
+        <p class="lead">Losowanie dzieje się w tej przeglądarce i nie pokazuje wyników. Dostajesz jeden wspólny link dla całej rodziny. Każdy wybiera na nim swoje imię i odwraca swoją zawieszkę.</p>
+      </header>
+
+      <section class="step">
+        <div class="step-num" aria-hidden="true">1</div>
+        <div class="step-body">
+          <h2>Kto bierze udział</h2>
+          <div class="fields">
+            <div>
+              <label class="field" for="names">Uczestnicy</label>
+              <textarea id="names" spellcheck="false">${esc(state.names)}</textarea>
+              <p class="help">Jedno imię w wierszu, w kolejności, w jakiej mają się wyświetlać.</p>
+            </div>
+            <div>
+              <label class="field" for="excl">Nie może wylosować</label>
+              <textarea id="excl" spellcheck="false">${esc(state.excl)}</textarea>
+              <p class="help">„Ania → Rafał” znaczy, że Ania nie może dostać Rafała. Wiersze z # to komentarze. Siebie nikt nie wylosuje.</p>
+            </div>
+          </div>
+          <p class="status" id="status"></p>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-num" aria-hidden="true">2</div>
+        <div class="step-body">
+          <h2>Losowanie</h2>
+          <div id="drawArea"></div>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-num" aria-hidden="true">3</div>
+        <div class="step-body">
+          <h2>Wyślij link rodzinie</h2>
+          <div id="shareArea"></div>
+          <div>
+            <label class="field" for="base">Adres tej strony</label>
+            <input type="text" id="base" value="${esc(state.base)}" placeholder="https://…github.io/…" spellcheck="false" autocomplete="off">
+            <p class="help">Uzupełnia się sam. Zmień go tylko, jeśli link poniżej prowadzi w złe miejsce.</p>
+          </div>
+        </div>
+      </section>`;
+
+    const $ = id => document.getElementById(id);
+    const statusEl = $("status"), drawArea = $("drawArea"), shareArea = $("shareArea");
+    let confirming = false, current = null;
+
+    function refreshStatus() {
+      current = analyse(state);
+      if (current.error) {
+        statusEl.className = "status bad"; statusEl.textContent = current.error;
+      } else {
+        const n = current.perms.length;
+        statusEl.className = "status " + (n < 4 ? "warn" : "ok");
+        statusEl.textContent = `${current.names.length} osób, ${current.pairs.size} wykluczonych par. Możliwych układów: ${n} z ${factorial(current.names.length)}.` +
+          (n < 4 ? " To mało, wynik będzie łatwy do odgadnięcia." : "");
+      }
+      renderDraw();
+    }
+
+    function renderDraw() {
+      const blocked = !!current.error;
+      if (state.result && confirming) {
+        drawArea.innerHTML = `
+          <div class="confirm">
+            <p><strong>Losować od nowa?</strong> Powstanie nowy link. Stary link z losowania <span class="draw-id">${esc(state.result.drawId)}</span> dalej będzie pokazywał stare pary, więc jeśli już go wysłałeś, napisz rodzinie, żeby go nie używali.</p>
+            <div class="row">
+              <button class="btn" id="redraw" type="button">Tak, losuj od nowa</button>
+              <button class="btn-ghost" id="cancel" type="button">Zostaw obecne</button>
+            </div>
+          </div>`;
+        $("redraw").onclick = () => { confirming = false; doDraw(); };
+        $("cancel").onclick = () => { confirming = false; renderDraw(); };
+        return;
+      }
+      drawArea.innerHTML = state.result
+        ? `<p class="status ok">Wylosowano. Numer losowania: <span class="draw-id">${esc(state.result.drawId)}</span> (widać go też u góry strony dla rodziny).</p>
+           <div><button class="btn-ghost" id="again" type="button" ${blocked ? "disabled" : ""}>Losuj od nowa</button></div>`
+        : `<div><button class="btn" id="draw" type="button" ${blocked ? "disabled" : ""}>Losuj</button></div>`;
+      if ($("again")) $("again").onclick = () => { confirming = true; renderDraw(); };
+      if ($("draw")) $("draw").onclick = doDraw;
+    }
+
+    function doDraw() {
+      if (!current || current.error) return;
+      const perm = current.perms[randInt(current.perms.length)];
+      const drawId = Array.from(crypto.getRandomValues(new Uint8Array(2)), b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+      state.result = { drawId, token: makeToken(drawId, current.names.map((g, i) => [g, current.names[perm[i]]])) };
+      save(state); renderDraw(); renderShare();
+      toast("Wylosowano. Link jest gotowy.");
+    }
+
+    function copyText(text, okMsg) {
+      const fail = () => { const u = $("shareUrl"); if (u) { u.focus(); u.select(); } toast("Zaznaczyłem link. Skopiuj go skrótem Ctrl+C."); };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => toast(okMsg), fail);
+        else fail();
+      } catch (e) { fail(); }
+    }
+
+    function renderShare() {
+      if (!state.result) {
+        shareArea.innerHTML = `<p class="help">Po losowaniu pojawi się tu jeden link dla wszystkich i gotowa wiadomość do wklejenia na rodzinną grupę.</p>`;
+        return;
+      }
+      const url = linkFor(state.base, state.result.token);
+      shareArea.innerHTML = `
+        <div class="share-box">
+          <label class="field" for="shareUrl">Link dla całej rodziny</label>
+          <input class="url" type="text" id="shareUrl" readonly value="${esc(url)}">
+          <div class="row">
+            <button class="btn" id="copyMsg" type="button">Kopiuj wiadomość</button>
+            <button class="btn-ghost" id="copyLink" type="button">Kopiuj sam link</button>
+          </div>
+          <p class="help">Możesz otworzyć link i wybrać swoje imię, jak wszyscy. Nie klikaj tylko w cudze imiona.</p>
+        </div>`;
+      $("copyLink").onclick = () => copyText(url, "Skopiowano link.");
+      $("copyMsg").onclick = () => copyText(
+        `Losowanie prezentów na Gwiazdkę ${YEAR} gotowe 🎄\nWejdź w link, wybierz swoje imię i odwróć zawieszkę, żeby zobaczyć, komu robisz prezent:\n${url}\n\nKlikamy tylko w swoje imię 🙂`,
+        "Skopiowano wiadomość.");
+    }
+
+    $("names").addEventListener("input", e => { state.names = e.target.value; save(state); refreshStatus(); });
+    $("excl").addEventListener("input", e => { state.excl = e.target.value; save(state); refreshStatus(); });
+    $("base").addEventListener("input", e => { state.base = e.target.value; state.baseManual = !!e.target.value.trim(); save(state); renderShare(); });
+
+    refreshStatus(); renderShare();
+  }
+
+  function route() {
+    const h = location.hash.replace(/^#/, "");
+    if (/^g[0-9a-f]/.test(h)) { const d = readToken(h); if (d) renderPicker(d); else renderBroken(); }
+    else renderOrganizer();
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+
+</body>
+</html>
